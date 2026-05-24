@@ -11,6 +11,7 @@ import { exportUniversalExcel } from '@/lib/excel-export';
 export function Workspace() {
   const ready = useStore(isStoreReady);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [activeTab, setActiveTab] = useState('data');
 
   useEffect(() => {
     initStore();
@@ -54,23 +55,34 @@ export function Workspace() {
   }
 
   return (
-    <Tabs defaultValue="data" className="flex flex-col h-[800px] w-full overflow-hidden bg-white print:h-auto print:overflow-visible">
-      <div className="h-16 bg-white border-b flex items-center justify-between px-6 no-print print:hidden z-20">
-        <div className="flex-1">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col h-[800px] w-full overflow-hidden bg-white print:h-auto print:overflow-visible">
+      <div className="h-auto py-3 lg:h-16 lg:py-0 bg-white border-b flex flex-col lg:flex-row items-center justify-between px-4 lg:px-6 gap-3 no-print print:hidden z-20">
+        <div className="flex-1 w-full lg:w-auto flex justify-between items-center">
           <div className="text-sm font-semibold text-slate-800 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
             Live Editor
           </div>
+          
+          <div className="flex items-center gap-2 lg:hidden">
+             <Button onClick={handleExcelExport} variant="outline" className="h-8 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium text-xs px-3">
+               <FileSpreadsheet className="w-3 h-3 mr-1" /> Excel
+             </Button>
+             <Button onClick={handleDownload} disabled={isGeneratingPdf} className="h-8 bg-[#30a9b1] hover:bg-[#288c93] text-white shadow-md shadow-[#30a9b1]/20 font-medium text-xs px-3">
+              <Download className={`w-3 h-3 mr-1 ${isGeneratingPdf ? 'animate-bounce' : ''}`} /> 
+              {isGeneratingPdf ? 'Menyiapkan...' : 'PDF'}
+            </Button>
+          </div>
         </div>
 
-        <TabsList className="bg-slate-100/80 p-1 rounded-full h-10">
-          <TabsTrigger value="data" className="rounded-full px-6 text-sm font-medium">Data Invoice</TabsTrigger>
-          <TabsTrigger value="brand" className="rounded-full px-6 text-sm font-medium">Brand & Pengaturan</TabsTrigger>
+        <TabsList className="bg-slate-100/80 p-1 rounded-full h-10 w-full lg:w-auto flex justify-start lg:justify-center overflow-x-auto shrink-0">
+          <TabsTrigger value="data" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap">Data Invoice</TabsTrigger>
+          <TabsTrigger value="brand" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap">Brand</TabsTrigger>
+          <TabsTrigger value="preview" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap flex lg:hidden">Preview</TabsTrigger>
         </TabsList>
 
-        <div className="flex items-center justify-end gap-3 flex-1">
+        <div className="hidden lg:flex items-center justify-end gap-3 flex-1">
           <Button onClick={handleExcelExport} variant="outline" className="h-9 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium">
-            <FileSpreadsheet className="w-4 h-4 mr-2" /> Ekspor ke Excel
+            <FileSpreadsheet className="w-4 h-4 mr-2" /> Ekspor Excel
           </Button>
           <Button onClick={handleDownload} disabled={isGeneratingPdf} className="h-9 bg-[#30a9b1] hover:bg-[#288c93] text-white shadow-md shadow-[#30a9b1]/20 font-medium">
             <Download className={`w-4 h-4 mr-2 ${isGeneratingPdf ? 'animate-bounce' : ''}`} /> 
@@ -79,12 +91,16 @@ export function Workspace() {
         </div>
       </div>
       
-      <div className="flex flex-1 overflow-hidden">
-        <div className="w-[45%] border-r bg-white h-full overflow-y-auto no-print print:hidden z-10">
+      <div className="flex flex-1 overflow-hidden relative">
+        <div className={`w-full lg:w-[45%] border-r bg-white h-full overflow-y-auto no-print print:hidden z-10 ${activeTab === 'preview' ? 'hidden lg:block' : 'block'}`}>
           <LeftPanel />
         </div>
-        <div className="w-[55%] h-full overflow-y-auto bg-[#f8fafc] block py-10 print:w-full print:bg-white print:py-0 print:overflow-visible relative">
-          <RightPanel />
+        <div className={`w-full lg:w-[55%] h-full overflow-y-auto bg-slate-200/50 block py-4 lg:py-10 print:w-full print:bg-white print:py-0 print:overflow-visible relative ${activeTab === 'preview' ? 'block' : 'hidden lg:block'}`}>
+          <div className="w-full overflow-x-auto flex justify-center pb-8">
+             <div className="origin-top shrink-0 transform scale-[0.6] sm:scale-75 md:scale-90 lg:scale-100">
+               <RightPanel />
+             </div>
+          </div>
         </div>
       </div>
     </Tabs>
