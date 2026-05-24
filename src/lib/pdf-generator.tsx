@@ -1,5 +1,6 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { translations, Language } from './i18n';
 
 // Formatter helper
 const formatIDR = (amount: number) => {
@@ -212,7 +213,8 @@ const styles = StyleSheet.create({
   }
 });
 
-export const InvoicePDF = ({ invoice, brand, metadata }: any) => {
+export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
+  const t = translations[lang as Language];
   const hasItemDiscounts = invoice.lineItems.some((i: any) => i.discount > 0);
   
   const subtotal = invoice.lineItems.reduce((sum: number, item: any) => {
@@ -234,23 +236,23 @@ export const InvoicePDF = ({ invoice, brand, metadata }: any) => {
             {brand.logoBase64 ? (
               <Image src={brand.logoBase64} style={styles.logo} />
             ) : (
-              <View style={styles.logoPlaceholder}><Text>Logo Anda</Text></View>
+              <View style={styles.logoPlaceholder}><Text>{t.logoPlaceholderPreview}</Text></View>
             )}
           </View>
           <View style={styles.titleBlock}>
-            <Text style={[styles.title, { color: primaryColor }]}>Invoice</Text>
+            <Text style={[styles.title, { color: primaryColor }]}>{t.invoice}</Text>
             <View style={styles.refTable}>
               <View style={styles.refRow}>
-                <Text style={styles.refLabel}>Referensi</Text>
+                <Text style={styles.refLabel}>{t.reference}</Text>
                 <Text style={styles.refValue}>{invoice.invoiceNumber || 'INV-XXXX'}</Text>
               </View>
               <View style={styles.refRow}>
-                <Text style={styles.refLabel}>Tanggal</Text>
+                <Text style={styles.refLabel}>{t.date}</Text>
                 <Text style={styles.refValue}>{invoice.date || '-'}</Text>
               </View>
               {invoice.dueDate && (
                 <View style={styles.refRow}>
-                  <Text style={styles.refLabel}>Jatuh Tempo</Text>
+                  <Text style={styles.refLabel}>{t.dueDate}</Text>
                   <Text style={styles.refValue}>{invoice.dueDate}</Text>
                 </View>
               )}
@@ -261,34 +263,34 @@ export const InvoicePDF = ({ invoice, brand, metadata }: any) => {
         {/* Info Grid */}
         <View style={styles.infoGrid} fixed>
           <View style={styles.infoCol}>
-            <Text style={[styles.sectionTitle, { color: headerColor }]}>Informasi Perusahaan</Text>
+            <Text style={[styles.sectionTitle, { color: headerColor }]}>{t.companyInfo}</Text>
             <View style={[styles.divider, { borderBottomColor: headerColor }]} />
             {metadata.companyName && (
               <Text style={[styles.companyName, { color: primaryColor }]}>{metadata.companyName}</Text>
             )}
             <View>
               {metadata.companyAddress && <Text style={styles.infoText}>{metadata.companyAddress}</Text>}
-              {metadata.companyPhone && <Text style={styles.infoText}>Telp: {metadata.companyPhone}</Text>}
+              {metadata.companyPhone && <Text style={styles.infoText}>Tel: {metadata.companyPhone}</Text>}
               {metadata.companyEmail && <Text style={styles.infoText}>Email: {metadata.companyEmail}</Text>}
               {metadata.companyWebsite && <Text style={styles.infoText}>Web: {metadata.companyWebsite}</Text>}
-              {metadata.npwp && <Text style={[styles.infoText, { color: headerColor, marginTop: 4, fontWeight: 'bold' }]}>NPWP: {metadata.npwp}</Text>}
+              {metadata.npwp && <Text style={[styles.infoText, { color: headerColor, marginTop: 4, fontWeight: 'bold' }]}>{lang === 'en' ? 'Tax ID' : 'NPWP'}: {metadata.npwp}</Text>}
             </View>
           </View>
           <View style={styles.infoCol}>
-            <Text style={[styles.sectionTitle, { color: headerColor }]}>Tagihan Kepada</Text>
+            <Text style={[styles.sectionTitle, { color: headerColor }]}>{t.billTo}</Text>
             <View style={[styles.divider, { borderBottomColor: headerColor }]} />
-            <Text style={[styles.companyName, { color: primaryColor }]}>{invoice.clientName || 'Nama Klien'}</Text>
+            <Text style={[styles.companyName, { color: primaryColor }]}>{invoice.clientName || (lang === 'en' ? 'Client Name' : 'Nama Klien')}</Text>
             {invoice.clientAddress && <Text style={styles.infoText}>{invoice.clientAddress}</Text>}
           </View>
         </View>
 
         {/* Table Header */}
         <View style={[styles.tableHeader, { borderBottomColor: primaryColor }]}>
-          <Text style={[styles.thCol1, { color: headerColor }]}>ITEM & DESKRIPSI</Text>
-          <Text style={[styles.thCol2, { color: headerColor }]}>KUANTITAS</Text>
-          <Text style={[styles.thCol3, { color: headerColor }]}>HARGA SATUAN</Text>
-          {hasItemDiscounts && <Text style={[styles.thColDiscount, { color: headerColor }]}>DISKON</Text>}
-          <Text style={[styles.thColLast, { color: headerColor }]}>JUMLAH</Text>
+          <Text style={[styles.thCol1, { color: headerColor }]}>{t.itemDescription}</Text>
+          <Text style={[styles.thCol2, { color: headerColor }]}>{t.quantity}</Text>
+          <Text style={[styles.thCol3, { color: headerColor }]}>{t.unitPrice}</Text>
+          {hasItemDiscounts && <Text style={[styles.thColDiscount, { color: headerColor }]}>{t.discount}</Text>}
+          <Text style={[styles.thColLast, { color: headerColor }]}>{t.amount}</Text>
         </View>
 
         {/* Table Items */}
@@ -318,37 +320,37 @@ export const InvoicePDF = ({ invoice, brand, metadata }: any) => {
         <View wrap={false}>
           <View style={styles.footerSection}>
             <View style={[styles.paymentBox, { backgroundColor: mutedColor }]}>
-              <Text style={[styles.paymentTitle, { color: headerColor }]}>DETAIL PEMBAYARAN</Text>
+              <Text style={[styles.paymentTitle, { color: headerColor }]}>{t.paymentInfo.toUpperCase()}</Text>
               <Text style={styles.infoText}>Bank: {metadata.bankName} {metadata.branch && `(${metadata.branch})`}</Text>
-              <Text style={styles.infoText}>No. Rekening: {metadata.accountNumber}</Text>
-              <Text style={styles.infoText}>A/N: {metadata.accountName}</Text>
+              <Text style={styles.infoText}>{lang === 'en' ? 'Acc No:' : 'No. Rekening:'} {metadata.accountNumber}</Text>
+              <Text style={styles.infoText}>{lang === 'en' ? 'Acc Name:' : 'A/N:'} {metadata.accountName}</Text>
             </View>
 
             <View style={styles.totalsBox}>
               <View style={styles.totalRow}>
-                <Text style={{ color: headerColor }}>Subtotal</Text>
+                <Text style={{ color: headerColor }}>{t.subtotal}</Text>
                 <Text>{formatIDR(subtotal)}</Text>
               </View>
               {invoice.taxRate > 0 && (
                 <View style={styles.totalRow}>
-                  <Text style={{ color: headerColor }}>PPN ({invoice.taxRate}%)</Text>
+                  <Text style={{ color: headerColor }}>{t.tax} ({invoice.taxRate}%)</Text>
                   <Text>{formatIDR(taxAmount)}</Text>
                 </View>
               )}
               {invoice.discount > 0 && (
                 <View style={styles.totalRow}>
-                  <Text style={{ color: headerColor }}>Diskon</Text>
+                  <Text style={{ color: headerColor }}>{t.discount}</Text>
                   <Text style={{ color: '#dc2626' }}>-{formatIDR(invoice.discount)}</Text>
                 </View>
               )}
               {invoice.shipping > 0 && (
                 <View style={styles.totalRow}>
-                  <Text style={{ color: headerColor }}>Pengiriman/Lainnya</Text>
+                  <Text style={{ color: headerColor }}>{t.shipping}</Text>
                   <Text>{formatIDR(invoice.shipping)}</Text>
                 </View>
               )}
               <View style={[styles.finalTotalRow, { borderTopColor: primaryColor }]}>
-                <Text style={[styles.finalTotalText, { color: primaryColor }]}>Total</Text>
+                <Text style={[styles.finalTotalText, { color: primaryColor }]}>{t.total}</Text>
                 <Text style={[styles.finalTotalText, { color: primaryColor }]}>{formatIDR(total)}</Text>
               </View>
             </View>
@@ -357,28 +359,28 @@ export const InvoicePDF = ({ invoice, brand, metadata }: any) => {
           <View style={styles.signatureSection}>
             {metadata.hasMeterai && (
               <View style={styles.meteraiBox}>
-                <Text style={styles.meteraiText}>Tempel Meterai Rp 10.000 di sini</Text>
+                <Text style={styles.meteraiText}>{lang === 'en' ? 'Duty Stamp Rp 10.000' : 'Tempel Meterai Rp 10.000 di sini'}</Text>
               </View>
             )}
             <View style={styles.sigBox}>
-              <Text style={{ color: headerColor }}>Dengan Hormat,</Text>
+              <Text style={{ color: headerColor }}>{lang === 'en' ? 'Sincerely,' : 'Dengan Hormat,'}</Text>
               <View style={styles.sigLine} />
-              <Text style={[styles.sigName, { color: headerColor }]}>{metadata.signatureName || 'Tanda Tangan Resmi'}</Text>
-              <Text style={styles.sigRole}>{metadata.signaturePosition || 'Direktur'}</Text>
+              <Text style={[styles.sigName, { color: headerColor }]}>{metadata.signatureName || t.signature}</Text>
+              <Text style={styles.sigRole}>{metadata.signaturePosition || ''}</Text>
             </View>
           </View>
 
           {invoice.notes && (
             <View style={styles.notesBox}>
-              <Text style={{ fontWeight: 'bold' }}>Catatan / Syarat & Ketentuan:</Text>
+              <Text style={{ fontWeight: 'bold' }}>{t.notes}:</Text>
               <Text>{invoice.notes}</Text>
             </View>
           )}
         </View>
 
         <View style={styles.watermark} fixed>
-          <Text style={styles.watermarkText}>Dibuat secara instan dengan tagihin.co.id</Text>
-          <Image src={typeof window !== 'undefined' ? window.location.origin + "/logo.png" : "/logo.png"} style={styles.watermarkLogo} />
+          <Text style={styles.watermarkText}>{t.watermark}</Text>
+          <Image src={typeof window !== 'undefined' ? window.location.origin + "/logo.png" : "https://tagihin.vercel.app/logo.png"} style={styles.watermarkLogo} />
         </View>
       </Page>
     </Document>

@@ -2,6 +2,7 @@
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { Workspace } from '../components/Workspace';
+import { HeroText } from '../components/HeroText';
 ---
 
 <!DOCTYPE html>
@@ -11,19 +12,19 @@ import { Workspace } from '../components/Workspace';
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" href="/tagihin_favicon.png" />
     <meta name="generator" content={Astro.generator} />
-    <title>Tagihin - Invoice Bukan Sekadar Tagihan</title>
-    <meta name="description" content="Personalisasi font, palet warna, dan logo untuk menciptakan invoice premium yang merepresentasikan brand Anda—langsung jadi, gratis, tanpa ribet." />
+    <title>Tagihin - Premium Invoice Generator</title>
+    <meta name="description" content="Personalize fonts, color palettes, and logos to create premium invoices that represent your brand—instantly, free, and hassle-free." />
     
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Tagihin - Pembuat Invoice Premium" />
-    <meta property="og:description" content="Buat tagihan elegan yang mencerminkan profesionalisme bisnis Anda. 100% gratis, tanpa perlu mendaftar." />
+    <meta property="og:title" content="Tagihin - Premium Invoice Generator" />
+    <meta property="og:description" content="Create elegant invoices that reflect your business professionalism. 100% free, no sign up required." />
     <meta property="og:image" content="/logo.png" />
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tagihin - Pembuat Invoice Premium" />
-    <meta name="twitter:description" content="Buat tagihan elegan yang mencerminkan profesionalisme bisnis Anda. 100% gratis, tanpa perlu mendaftar." />
+    <meta name="twitter:title" content="Tagihin - Premium Invoice Generator" />
+    <meta name="twitter:description" content="Create elegant invoices that reflect your business professionalism. 100% free, no sign up required." />
   </head>
   <body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-slate-200 print:bg-white overflow-x-hidden">
     
@@ -38,12 +39,7 @@ import { Workspace } from '../components/Workspace';
 
     {/* Hero Section */}
     <main class="relative z-10 max-w-7xl mx-auto px-6 py-24 text-center print:p-0 print:m-0 print:max-w-none">
-      <h1 class="text-display-xxl mb-6 print:hidden text-[#20324c]">
-        Invoice bukan sekadar<br/>tagihan.
-      </h1>
-      <p class="text-lg text-slate-500 mb-12 max-w-2xl mx-auto leading-relaxed print:hidden font-light">
-        Personalisasi font, palet warna, dan logo untuk menciptakan invoice premium yang merepresentasikan brand Anda—langsung jadi, gratis, tanpa ribet.
-      </p>
+      <HeroText client:load />
 
       {/* Embedded Live Workspace */}
       <div class="w-full max-w-[1200px] mx-auto text-left mb-32 print:m-0 print:max-w-none transform transition-transform duration-700 ease-out translate-y-0 opacity-100">

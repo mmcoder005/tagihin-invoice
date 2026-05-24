@@ -1,4 +1,5 @@
 import { atom, map } from 'nanostores';
+import { persistentAtom } from '@nanostores/persistent';
 
 export interface LineItem {
   id: string;
@@ -85,6 +86,9 @@ export const metadataStore = map<Metadata>({
 });
 
 export const isStoreReady = atom(false);
+
+// i18n
+export const languageStore = persistentAtom<'en' | 'id'>('public_language', 'en');
 
 export function resetStore() {
   invoiceStore.set({ ...defaultInvoiceState, id: undefined });

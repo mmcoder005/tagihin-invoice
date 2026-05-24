@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import { isStoreReady, initStore, invoiceStore, brandStore, metadataStore } from '@/store/invoiceStore';
+import { isStoreReady, initStore, invoiceStore, brandStore, metadataStore, languageStore } from '@/store/invoiceStore';
+import { translations } from '@/lib/i18n';
 import { LeftPanel } from './LeftPanel';
 import { RightPanel } from './RightPanel';
 import { Download, FileSpreadsheet } from 'lucide-react';
@@ -10,6 +11,8 @@ import { exportUniversalExcel } from '@/lib/excel-export';
 
 export function Workspace() {
   const ready = useStore(isStoreReady);
+  const lang = useStore(languageStore);
+  const t = translations[lang];
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [activeTab, setActiveTab] = useState('data');
 
@@ -27,7 +30,7 @@ export function Workspace() {
       const { pdf } = await import('@react-pdf/renderer');
       const { InvoicePDF } = await import('@/lib/pdf-generator');
       
-      const blob = await pdf(<InvoicePDF invoice={data} brand={brand} metadata={metadata} />).toBlob();
+      const blob = await pdf(<InvoicePDF invoice={data} brand={brand} metadata={metadata} lang={lang} />).toBlob();
       
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -60,33 +63,39 @@ export function Workspace() {
         <div className="flex-1 w-full lg:w-auto flex justify-between items-center">
           <div className="text-sm font-semibold text-slate-800 flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-            Live Editor
+            {t.liveEditor}
           </div>
           
           <div className="flex items-center gap-2 lg:hidden">
+             <Button onClick={() => languageStore.set(lang === 'en' ? 'id' : 'en')} variant="outline" className="h-8 font-medium text-xs px-2 border-slate-200">
+               {lang === 'en' ? 'ID' : 'EN'}
+             </Button>
              <Button onClick={handleExcelExport} variant="outline" className="h-8 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium text-xs px-3">
                <FileSpreadsheet className="w-3 h-3 mr-1" /> Excel
              </Button>
              <Button onClick={handleDownload} disabled={isGeneratingPdf} className="h-8 bg-[#30a9b1] hover:bg-[#288c93] text-white shadow-md shadow-[#30a9b1]/20 font-medium text-xs px-3">
               <Download className={`w-3 h-3 mr-1 ${isGeneratingPdf ? 'animate-bounce' : ''}`} /> 
-              {isGeneratingPdf ? 'Menyiapkan...' : 'PDF'}
+              {isGeneratingPdf ? t.preparing : 'PDF'}
             </Button>
           </div>
         </div>
 
         <TabsList className="bg-slate-100/80 p-1 rounded-full h-10 w-full lg:w-auto flex justify-start lg:justify-center overflow-x-auto shrink-0">
-          <TabsTrigger value="data" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap">Data Invoice</TabsTrigger>
-          <TabsTrigger value="brand" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap">Brand</TabsTrigger>
-          <TabsTrigger value="preview" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap flex lg:hidden">Preview</TabsTrigger>
+          <TabsTrigger value="data" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap">{t.dataInvoice}</TabsTrigger>
+          <TabsTrigger value="brand" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap">{t.brand}</TabsTrigger>
+          <TabsTrigger value="preview" className="rounded-full px-4 lg:px-6 text-sm font-medium whitespace-nowrap flex lg:hidden">{t.preview}</TabsTrigger>
         </TabsList>
 
         <div className="hidden lg:flex items-center justify-end gap-3 flex-1">
+          <Button onClick={() => languageStore.set(lang === 'en' ? 'id' : 'en')} variant="outline" className="h-9 font-medium border-slate-200">
+            {lang === 'en' ? 'ID' : 'EN'}
+          </Button>
           <Button onClick={handleExcelExport} variant="outline" className="h-9 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium">
-            <FileSpreadsheet className="w-4 h-4 mr-2" /> Ekspor Excel
+            <FileSpreadsheet className="w-4 h-4 mr-2" /> {t.exportExcel}
           </Button>
           <Button onClick={handleDownload} disabled={isGeneratingPdf} className="h-9 bg-[#30a9b1] hover:bg-[#288c93] text-white shadow-md shadow-[#30a9b1]/20 font-medium">
             <Download className={`w-4 h-4 mr-2 ${isGeneratingPdf ? 'animate-bounce' : ''}`} /> 
-            {isGeneratingPdf ? 'Menyiapkan...' : 'Download PDF'}
+            {isGeneratingPdf ? t.preparing : t.downloadPdf}
           </Button>
         </div>
       </div>
