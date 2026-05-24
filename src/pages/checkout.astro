@@ -1,0 +1,131 @@
+---
+import '../styles/global.css';
+import { ArrowLeft, CheckCircle2, Lock } from 'lucide-react';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Tagihin Pro Checkout</title>
+  </head>
+  <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+    <!-- Mesh Background -->
+    <div class="absolute inset-0 z-0 bg-mesh-hero pointer-events-none h-[600px]"></div>
+
+    <!-- Header -->
+    <div class="h-16 bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-sm flex items-center px-6 sticky top-0 z-20">
+      <div class="max-w-6xl mx-auto w-full flex justify-between items-center">
+        <a href="/dashboard" class="flex items-center text-sm font-medium text-slate-600 hover:text-[#20324c] transition-colors">
+          <ArrowLeft class="w-4 h-4 mr-2" /> Kembali ke Dashboard
+        </a>
+        <a href="/"><img src="/logo.png" alt="Tagihin Logo" class="h-7 opacity-80 hover:opacity-100 transition-opacity" /></a>
+      </div>
+    </div>
+
+    <main class="flex-1 max-w-5xl mx-auto w-full px-6 py-12 md:py-24 flex flex-col md:flex-row gap-12 md:gap-20 items-center md:items-start justify-center relative z-10">
+      
+      {/* Product Details */}
+      <div class="flex-1 w-full max-w-lg pt-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#30a9b1]/10 text-[#30a9b1] text-xs font-semibold uppercase tracking-wider mb-6">
+          Premium Tier
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-[#20324c]">
+          Jadilah <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#23af8c] to-[#30a9b1]">Pro</span>
+        </h1>
+        <p class="text-lg text-slate-500 mb-10 leading-relaxed">
+          Tingkatkan profesionalisme bisnis Anda dengan fitur lengkap. Dapatkan akses tak terbatas selamanya dengan langganan bulanan yang terjangkau.
+        </p>
+
+        <ul class="space-y-6">
+          <li class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 mt-0.5">
+              <CheckCircle2 class="w-5 h-5 text-emerald-500" />
+            </div>
+            <div>
+              <span class="font-semibold text-[#20324c] block text-lg">Buat Invoice Tanpa Batas</span>
+              <span class="text-slate-500 leading-snug block mt-1">Tidak ada lagi limitasi 3 invoice gratis. Buat sebanyak yang bisnis Anda butuhkan.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 mt-0.5">
+              <CheckCircle2 class="w-5 h-5 text-emerald-500" />
+            </div>
+            <div>
+              <span class="font-semibold text-[#20324c] block text-lg">Hapus Watermark</span>
+              <span class="text-slate-500 leading-snug block mt-1">Kirim invoice yang 100% merepresentasikan identitas brand Anda tanpa embel-embel logo kami.</span>
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 mt-0.5">
+              <CheckCircle2 class="w-5 h-5 text-emerald-500" />
+            </div>
+            <div>
+              <span class="font-semibold text-[#20324c] block text-lg">Database Klien & Riwayat</span>
+              <span class="text-slate-500 leading-snug block mt-1">Simpan otomatis semua data klien dan riwayat transaksi untuk akses instan di masa depan.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      {/* Checkout Card */}
+      <div class="w-full max-w-sm md:mt-4">
+        <div class="bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-white/50 p-8 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#23af8c]/20 to-[#30a9b1]/5 rounded-bl-full -mr-8 -mt-8 pointer-events-none"></div>
+          
+          <h2 class="text-xl font-bold mb-6 text-[#20324c]">Ringkasan Pesanan</h2>
+          
+          <div class="space-y-4 mb-6 relative z-10">
+            <div class="flex justify-between items-center py-3 border-b border-slate-100">
+              <span class="text-slate-600 font-medium">Tagihin Pro (Bulanan)</span>
+              <span class="font-semibold text-[#20324c] tabular-nums">Rp 49.000</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-end mb-8 relative z-10">
+            <span class="font-bold text-lg text-[#20324c]">Total Bayar</span>
+            <span class="text-3xl font-bold tracking-tight text-[#30a9b1] tabular-nums">Rp 49.000</span>
+          </div>
+
+          <form action="/api/create-checkout" method="POST" id="checkoutForm" class="relative z-10">
+            <input type="hidden" name="user_id" id="userIdInput" value="" />
+            <button type="submit" class="w-full btn-primary py-4 text-base shadow-lg shadow-[#30a9b1]/20 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+              <Lock class="w-4 h-4" /> Bayar & Aktifkan Pro
+            </button>
+          </form>
+          
+          <div class="mt-6 flex flex-col items-center gap-2 relative z-10">
+            <p class="text-[11px] text-center text-slate-400 font-medium uppercase tracking-wider">
+              Pembayaran aman & terenkripsi
+            </p>
+            <div class="flex items-center gap-2 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-default">
+               <img src="/xendit.png" alt="Xendit" class="h-6" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Automatically grab the authenticated user's ID from local storage
+      const authKeys = Object.keys(localStorage).filter(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+      if (authKeys.length > 0) {
+        try {
+          const sessionData = localStorage.getItem(authKeys[0]);
+          if (sessionData) {
+            const session = JSON.parse(sessionData);
+            const userId = session?.user?.id;
+            if (userId) {
+              const input = document.getElementById('userIdInput') as HTMLInputElement;
+              if (input) input.value = userId;
+            }
+          }
+        } catch(e) {
+          console.error("Could not parse session data", e);
+        }
+      }
+    </script>
+  </body>
+</html>
