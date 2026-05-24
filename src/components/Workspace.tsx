@@ -67,9 +67,6 @@ export function Workspace() {
           </div>
           
           <div className="flex items-center gap-2 lg:hidden">
-             <Button onClick={() => languageStore.set(lang === 'en' ? 'id' : 'en')} variant="outline" className="h-8 font-medium text-xs px-2 border-slate-200">
-               {lang === 'en' ? 'ID' : 'EN'}
-             </Button>
              <Button onClick={handleExcelExport} variant="outline" className="h-8 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium text-xs px-3">
                <FileSpreadsheet className="w-3 h-3 mr-1" /> Excel
              </Button>
@@ -87,9 +84,6 @@ export function Workspace() {
         </TabsList>
 
         <div className="hidden lg:flex items-center justify-end gap-3 flex-1">
-          <Button onClick={() => languageStore.set(lang === 'en' ? 'id' : 'en')} variant="outline" className="h-9 font-medium border-slate-200">
-            {lang === 'en' ? 'ID' : 'EN'}
-          </Button>
           <Button onClick={handleExcelExport} variant="outline" className="h-9 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium">
             <FileSpreadsheet className="w-4 h-4 mr-2" /> {t.exportExcel}
           </Button>

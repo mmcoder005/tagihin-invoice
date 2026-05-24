@@ -3,6 +3,7 @@ import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { Workspace } from '../components/Workspace';
 import { HeroText } from '../components/HeroText';
+import { LanguageToggle } from '../components/LanguageToggle';
 ---
 
 <!DOCTYPE html>
@@ -34,6 +35,7 @@ import { HeroText } from '../components/HeroText';
     <nav class="relative z-50 bg-white/60 backdrop-blur-xl border-b border-white/20 shadow-sm px-6 py-4 flex justify-between items-center print:hidden w-full sticky top-0">
       <div class="max-w-7xl mx-auto w-full flex justify-between items-center">
         <img src="/logo.png" alt="Tagihin Logo" class="h-8" />
+        <LanguageToggle client:load />
       </div>
     </nav>
 
