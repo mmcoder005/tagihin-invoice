@@ -1,49 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useStore } from '@nanostores/react';
-import { isStoreReady, initStore, isSaving, invoiceStore } from '@/store/invoiceStore';
+import { isStoreReady, initStore, invoiceStore, brandStore, metadataStore } from '@/store/invoiceStore';
 import { LeftPanel } from './LeftPanel';
 import { RightPanel } from './RightPanel';
-import { supabase } from '@/lib/supabase';
-import { ArrowLeft, Save, Download, FileSpreadsheet } from 'lucide-react';
+import { Download, FileSpreadsheet } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PremiumDialog } from '@/components/PremiumDialog';
 import { Button } from '@/components/ui/button';
 import { exportUniversalExcel } from '@/lib/excel-export';
-import { brandStore, metadataStore } from '@/store/invoiceStore';
 
-export function Workspace({ isPublic = false }: { isPublic?: boolean }) {
+export function Workspace() {
   const ready = useStore(isStoreReady);
-  const saving = useStore(isSaving);
-  const [showPremiumDialog, setShowPremiumDialog] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   useEffect(() => {
-    checkAuthAndInit();
+    initStore();
   }, []);
 
-  const checkAuthAndInit = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user && !isPublic) {
-      window.location.href = '/login';
-      return;
-    }
-    const params = new URLSearchParams(window.location.search);
-    const invoiceId = params.get('id');
-    setIsEditing(!!invoiceId);
-    initStore(invoiceId || undefined, isPublic);
-  };
-
   const handleDownload = async () => {
-    if (isPublic) {
-      const generated = parseInt(localStorage.getItem('freeInvoicesGenerated') || '0', 10);
-      if (generated >= 3) {
-        setShowPremiumDialog(true);
-        return;
-      }
-      localStorage.setItem('freeInvoicesGenerated', (generated + 1).toString());
-    }
-
     setIsGeneratingPdf(true);
     try {
       const data = invoiceStore.get();
@@ -77,41 +50,29 @@ export function Workspace({ isPublic = false }: { isPublic?: boolean }) {
   };
 
   if (!ready) {
-    return <div className="flex h-screen items-center justify-center">Loading Workspace...</div>;
+    return <div className="flex h-[800px] items-center justify-center">Memuat Workspace...</div>;
   }
 
   return (
-    <Tabs defaultValue="data" className={`flex flex-col ${isPublic ? 'h-[800px] rounded-2xl border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)]' : 'h-screen'} w-full overflow-hidden bg-gray-50/50 print:h-auto print:overflow-visible`}>
-      <div className="h-14 bg-white border-b flex items-center justify-between px-4 no-print print:hidden z-20">
+    <Tabs defaultValue="data" className="flex flex-col h-[800px] w-full overflow-hidden bg-white print:h-auto print:overflow-visible">
+      <div className="h-16 bg-white border-b flex items-center justify-between px-6 no-print print:hidden z-20">
         <div className="flex-1">
-          {!isPublic ? (
-            <button onClick={() => window.location.href = '/dashboard'} className="flex items-center text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Kembali
-            </button>
-          ) : (
-            <div className="text-sm font-medium text-slate-500">Live Preview</div>
-          )}
+          <div className="text-sm font-semibold text-slate-800 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+            Live Editor
+          </div>
         </div>
 
-        <TabsList className="bg-slate-100/50 p-1 rounded-full h-10">
-          <TabsTrigger value="data" className="rounded-full px-6 text-sm">Data Invoice</TabsTrigger>
-          {!isEditing && <TabsTrigger value="brand" className="rounded-full px-6 text-sm">Brand & Pengaturan</TabsTrigger>}
+        <TabsList className="bg-slate-100/80 p-1 rounded-full h-10">
+          <TabsTrigger value="data" className="rounded-full px-6 text-sm font-medium">Data Invoice</TabsTrigger>
+          <TabsTrigger value="brand" className="rounded-full px-6 text-sm font-medium">Brand & Pengaturan</TabsTrigger>
         </TabsList>
 
-        <div className="flex items-center justify-end text-sm text-slate-500 gap-4 flex-1">
-          {!isPublic && (
-            <div className="flex items-center gap-2 tabular-nums">
-              {saving ? (
-                <><div className="w-2 h-2 rounded-full bg-[#30a9b1] animate-pulse"></div> Menyimpan...</>
-              ) : (
-                <><Save className="w-4 h-4 text-[#23af8c]" /> Tersimpan</>
-              )}
-            </div>
-          )}
-          <Button onClick={handleExcelExport} variant="outline" className="h-8 text-[#30a9b1] border-[#30a9b1] hover:bg-[#30a9b1]/5">
+        <div className="flex items-center justify-end gap-3 flex-1">
+          <Button onClick={handleExcelExport} variant="outline" className="h-9 text-[#30a9b1] border-[#30a9b1]/30 hover:bg-[#30a9b1]/5 font-medium">
             <FileSpreadsheet className="w-4 h-4 mr-2" /> Ekspor ke Excel
           </Button>
-          <Button onClick={handleDownload} disabled={isGeneratingPdf} className="h-8 btn-primary">
+          <Button onClick={handleDownload} disabled={isGeneratingPdf} className="h-9 bg-[#30a9b1] hover:bg-[#288c93] text-white shadow-md shadow-[#30a9b1]/20 font-medium">
             <Download className={`w-4 h-4 mr-2 ${isGeneratingPdf ? 'animate-bounce' : ''}`} /> 
             {isGeneratingPdf ? 'Menyiapkan...' : 'Download PDF'}
           </Button>
@@ -119,15 +80,13 @@ export function Workspace({ isPublic = false }: { isPublic?: boolean }) {
       </div>
       
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-[45%] border-r bg-white h-full overflow-y-auto no-print print:hidden shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-10">
+        <div className="w-[45%] border-r bg-white h-full overflow-y-auto no-print print:hidden z-10">
           <LeftPanel />
         </div>
-        <div className="w-[55%] h-full overflow-y-auto bg-[#f8fafc] block py-10 print:w-full print:bg-white print:py-0 print:overflow-visible print:block relative">
-          <RightPanel onRemoveWatermark={isPublic ? () => setShowPremiumDialog(true) : undefined} />
+        <div className="w-[55%] h-full overflow-y-auto bg-[#f8fafc] block py-10 print:w-full print:bg-white print:py-0 print:overflow-visible relative">
+          <RightPanel />
         </div>
       </div>
-
-      <PremiumDialog open={showPremiumDialog} onOpenChange={setShowPremiumDialog} />
     </Tabs>
   );
 }
