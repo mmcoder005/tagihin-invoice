@@ -106,7 +106,7 @@ export function Workspace() {
         </div>
         <div className={`w-full lg:w-[55%] h-full overflow-y-auto bg-slate-200/50 block py-4 lg:py-10 print:w-full print:bg-white print:py-0 print:overflow-visible relative ${activeTab === 'preview' ? 'block' : 'hidden lg:block'}`}>
           <div className="w-full overflow-x-auto flex justify-center pb-8">
-             <div className="origin-top shrink-0 transform scale-[0.6] sm:scale-75 md:scale-90 lg:scale-100">
+             <div className="origin-top shrink-0 transform scale-[0.55] sm:scale-[0.65] md:scale-75 lg:scale-[0.6] xl:scale-[0.65] 2xl:scale-[0.75]">
                <RightPanel />
              </div>
           </div>

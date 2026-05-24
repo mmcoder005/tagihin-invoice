@@ -229,7 +229,9 @@ export function RightPanel({ onRemoveWatermark }: RightPanelProps) {
           {/* Programmatic Watermark */}
           <div className="mt-12 pt-8 border-t text-center flex flex-col items-center justify-center text-xs text-slate-400 no-print-hide print:flex relative" style={{ breakInside: 'avoid' }}>
             <span>{t.watermark}</span>
-            <img src="/logo.png" alt="Tagihin" className="h-5 mt-3 opacity-50 grayscale" />
+            <a href="https://tagihin-invoice.vercel.app/" target="_blank" rel="noopener noreferrer" className="hover:opacity-100 transition-opacity">
+              <img src="/logo.png" alt="Tagihin" className="h-5 mt-3 opacity-50 grayscale hover:grayscale-0 transition-all duration-300" />
+            </a>
           </div>
                 </td>
               </tr>

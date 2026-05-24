@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image, Font, Link } from '@react-pdf/renderer';
 import { translations, Language } from './i18n';
 
 // Formatter helper
@@ -380,7 +380,9 @@ export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
 
         <View style={styles.watermark} fixed>
           <Text style={styles.watermarkText}>{t.watermark}</Text>
-          <Image src={typeof window !== 'undefined' ? window.location.origin + "/logo.png" : "https://tagihin.vercel.app/logo.png"} style={styles.watermarkLogo} />
+          <Link src="https://tagihin-invoice.vercel.app/">
+            <Image src={typeof window !== 'undefined' ? window.location.origin + "/logo.png" : "https://tagihin-invoice.vercel.app/logo.png"} style={styles.watermarkLogo} />
+          </Link>
         </View>
       </Page>
     </Document>
