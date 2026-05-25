@@ -213,7 +213,24 @@ const styles = StyleSheet.create({
   }
 });
 
+let registeredFontSrc = '';
+let currentFontFamily = 'Helvetica';
+
 export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
+  if (brand.fontBase64 && brand.fontBase64 !== registeredFontSrc) {
+    try {
+      currentFontFamily = `CustomBrandFont_${Math.random().toString(36).substring(7)}`;
+      Font.register({ family: currentFontFamily, src: brand.fontBase64 });
+      registeredFontSrc = brand.fontBase64;
+    } catch (e) {
+      console.error('Failed to register font', e);
+      currentFontFamily = 'Helvetica';
+    }
+  } else if (!brand.fontBase64) {
+    currentFontFamily = 'Helvetica';
+    registeredFontSrc = '';
+  }
+
   const t = translations[lang as Language];
   const hasItemDiscounts = invoice.lineItems.some((i: any) => i.discount > 0);
   
@@ -229,7 +246,7 @@ export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" style={[styles.page, { fontFamily: currentFontFamily }]}>
         {/* Top Header */}
         <View style={styles.headerRow} fixed>
           <View>
