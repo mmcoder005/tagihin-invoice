@@ -68,7 +68,7 @@ export const translations = {
     total: 'Total',
     paymentInfo: 'Payment Information',
     signature: 'Authorized Signature',
-    watermark: 'Created super fast with Tagihin',
+    watermark: 'Created With',
   },
   id: {
     // Header
@@ -137,6 +137,6 @@ export const translations = {
     total: 'Total',
     paymentInfo: 'Informasi Pembayaran',
     signature: 'Tanda Tangan',
-    watermark: 'Dibuat super cepat dengan Tagihin',
+    watermark: 'Dibuat Dengan',
   }
 };
