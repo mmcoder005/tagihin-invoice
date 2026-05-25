@@ -220,7 +220,17 @@ export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
   if (brand.fontBase64 && brand.fontBase64 !== registeredFontSrc) {
     try {
       currentFontFamily = `CustomBrandFont_${Math.random().toString(36).substring(7)}`;
-      Font.register({ family: currentFontFamily, src: brand.fontBase64 });
+      Font.register({ 
+        family: currentFontFamily, 
+        fonts: [
+          { src: brand.fontBase64, fontWeight: 'normal', fontStyle: 'normal' },
+          { src: brand.fontBase64, fontWeight: 'bold', fontStyle: 'normal' },
+          { src: brand.fontBase64, fontWeight: 'normal', fontStyle: 'italic' },
+          { src: brand.fontBase64, fontWeight: 'bold', fontStyle: 'italic' },
+          { src: brand.fontBase64, fontWeight: 700, fontStyle: 'normal' },
+          { src: brand.fontBase64, fontWeight: 700, fontStyle: 'italic' },
+        ]
+      });
       registeredFontSrc = brand.fontBase64;
     } catch (e) {
       console.error('Failed to register font', e);
