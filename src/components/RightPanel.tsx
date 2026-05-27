@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useStore } from '@nanostores/react';
 import { brandStore, invoiceStore, metadataStore, languageStore } from '@/store/invoiceStore';
 import { translations } from '@/lib/i18n';
+import { formatCurrency } from '@/lib/formatCurrency';
 import { Lock } from 'lucide-react';
 
 interface RightPanelProps {
@@ -24,10 +25,6 @@ export function RightPanel({ onRemoveWatermark }: RightPanelProps) {
 
   const taxAmount = (subtotal * invoice.taxRate) / 100;
   const total = subtotal + taxAmount - invoice.discount + invoice.shipping;
-
-  const formatIDR = (value: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
-  };
 
   const hasMeterai = total >= 5000000;
   const hasItemDiscounts = invoice.lineItems.some(item => (item.discount || 0) > 0);
@@ -145,13 +142,13 @@ export function RightPanel({ onRemoveWatermark }: RightPanelProps) {
                         {!item.name && !item.description && <span className="text-slate-400">...</span>}
                       </td>
                       <td className="py-4 text-center tabular-nums">{item.quantity}</td>
-                      <td className="py-4 text-right tabular-nums">{formatIDR(item.rate)}</td>
+                      <td className="py-4 text-right tabular-nums">{formatCurrency(item.rate, invoice.currency)}</td>
                       {hasItemDiscounts && (
                         <td className="py-4 text-right text-red-600 tabular-nums">
-                          {item.discount ? `-${formatIDR(item.discount)}` : '-'}
+                          {item.discount ? `-${formatCurrency(item.discount, invoice.currency)}` : '-'}
                         </td>
                       )}
-                      <td className="py-4 text-right font-medium tabular-nums">{formatIDR(lineTotal)}</td>
+                      <td className="py-4 text-right font-medium tabular-nums">{formatCurrency(lineTotal, invoice.currency)}</td>
                     </tr>
                   );
                 })}
@@ -174,29 +171,29 @@ export function RightPanel({ onRemoveWatermark }: RightPanelProps) {
             <div className="w-1/3 tabular-nums">
               <div className="flex justify-between py-1 border-b">
                 <span className="text-sm font-medium" style={{ color: brand.headerColor }}>{t.subtotal}</span>
-                <span>{formatIDR(subtotal)}</span>
+                <span>{formatCurrency(subtotal, invoice.currency)}</span>
               </div>
               {invoice.taxRate > 0 && (
                 <div className="flex justify-between py-1 border-b">
                   <span className="text-sm font-medium" style={{ color: brand.headerColor }}>{t.tax} ({invoice.taxRate}%)</span>
-                  <span>{formatIDR(taxAmount)}</span>
+                  <span>{formatCurrency(taxAmount, invoice.currency)}</span>
                 </div>
               )}
               {invoice.discount > 0 && (
                 <div className="flex justify-between py-1 border-b">
                   <span className="text-sm font-medium" style={{ color: brand.headerColor }}>{t.discount}</span>
-                  <span className="text-red-600">-{formatIDR(invoice.discount)}</span>
+                  <span className="text-red-600">-{formatCurrency(invoice.discount, invoice.currency)}</span>
                 </div>
               )}
               {invoice.shipping > 0 && (
                 <div className="flex justify-between py-1 border-b">
                   <span className="text-sm font-medium" style={{ color: brand.headerColor }}>{t.shipping}</span>
-                  <span>{formatIDR(invoice.shipping)}</span>
+                  <span>{formatCurrency(invoice.shipping, invoice.currency)}</span>
                 </div>
               )}
               <div className="flex justify-between py-3 mt-1 border-t-2 font-bold text-lg" style={{ borderColor: brand.primaryColor, color: brand.primaryColor }}>
                 <span>{t.total}</span>
-                <span>{formatIDR(total)}</span>
+                <span>{formatCurrency(total, invoice.currency)}</span>
               </div>
             </div>
           </div>

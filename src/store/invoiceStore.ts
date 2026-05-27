@@ -25,6 +25,7 @@ export interface InvoiceData {
   clientAddress: string;
   date: string;
   dueDate: string;
+  currency: string;
   lineItems: LineItem[];
   taxRate: number;
   discount: number;
@@ -59,6 +60,7 @@ const defaultInvoiceState: InvoiceData = {
   invoiceNumber: 'INV-0001',
   clientName: '',
   clientAddress: '',
+  currency: 'IDR',
   date: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   lineItems: [{ id: '1', name: '', description: '', quantity: 1, rate: 0, discount: 0 }],

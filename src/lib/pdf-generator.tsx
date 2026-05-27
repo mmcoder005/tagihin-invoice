@@ -2,15 +2,7 @@ import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Image, Font, Link } from '@react-pdf/renderer';
 import { translations, Language } from './i18n';
 
-// Formatter helper
-const formatIDR = (amount: number) => {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount || 0);
-};
+import { formatCurrency } from './formatCurrency';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -332,13 +324,13 @@ export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
                 {!item.name && !item.description && <Text style={styles.itemDesc}>...</Text>}
               </View>
               <Text style={styles.tdCol2}>{item.quantity}</Text>
-              <Text style={styles.tdCol3}>{formatIDR(item.rate)}</Text>
+              <Text style={styles.tdCol3}>{formatCurrency(item.rate, invoice.currency)}</Text>
               {hasItemDiscounts && (
                 <Text style={styles.tdColDiscount}>
-                  {item.discount ? `-${formatIDR(item.discount)}` : '-'}
+                  {item.discount ? `-${formatCurrency(item.discount, invoice.currency)}` : '-'}
                 </Text>
               )}
-              <Text style={styles.tdColLast}>{formatIDR(lineTotal)}</Text>
+              <Text style={styles.tdColLast}>{formatCurrency(lineTotal, invoice.currency)}</Text>
             </View>
           );
         })}
@@ -356,29 +348,29 @@ export const InvoicePDF = ({ invoice, brand, metadata, lang = 'id' }: any) => {
             <View style={styles.totalsBox}>
               <View style={styles.totalRow}>
                 <Text style={{ color: headerColor }}>{t.subtotal}</Text>
-                <Text>{formatIDR(subtotal)}</Text>
+                <Text>{formatCurrency(subtotal, invoice.currency)}</Text>
               </View>
+              {invoice.discount > 0 && (
+                <View style={styles.totalRow}>
+                  <Text style={{ color: headerColor }}>{t.discountTotal}</Text>
+                  <Text style={{ color: '#dc2626' }}>-{formatCurrency(invoice.discount, invoice.currency)}</Text>
+                </View>
+              )}
               {invoice.taxRate > 0 && (
                 <View style={styles.totalRow}>
                   <Text style={{ color: headerColor }}>{t.tax} ({invoice.taxRate}%)</Text>
-                  <Text>{formatIDR(taxAmount)}</Text>
-                </View>
-              )}
-              {invoice.discount > 0 && (
-                <View style={styles.totalRow}>
-                  <Text style={{ color: headerColor }}>{t.discount}</Text>
-                  <Text style={{ color: '#dc2626' }}>-{formatIDR(invoice.discount)}</Text>
+                  <Text>{formatCurrency(taxAmount, invoice.currency)}</Text>
                 </View>
               )}
               {invoice.shipping > 0 && (
                 <View style={styles.totalRow}>
                   <Text style={{ color: headerColor }}>{t.shipping}</Text>
-                  <Text>{formatIDR(invoice.shipping)}</Text>
+                  <Text>{formatCurrency(invoice.shipping, invoice.currency)}</Text>
                 </View>
               )}
               <View style={[styles.finalTotalRow, { borderTopColor: primaryColor }]}>
                 <Text style={[styles.finalTotalText, { color: primaryColor }]}>{t.total}</Text>
-                <Text style={[styles.finalTotalText, { color: primaryColor }]}>{formatIDR(total)}</Text>
+                <Text style={[styles.finalTotalText, { color: primaryColor }]}>{formatCurrency(total, invoice.currency)}</Text>
               </View>
             </View>
           </View>

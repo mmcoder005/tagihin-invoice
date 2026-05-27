@@ -76,7 +76,7 @@ export function LeftPanel() {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label>{t.date}</Label>
                 <Input type="date" value={invoice.date} onChange={e => invoiceStore.setKey('date', e.target.value)} />
@@ -84,6 +84,33 @@ export function LeftPanel() {
               <div className="space-y-2">
                 <Label>{t.dueDate}</Label>
                 <Input type="date" value={invoice.dueDate} onChange={e => invoiceStore.setKey('dueDate', e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label>Currency</Label>
+                <select 
+                  className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                  value={invoice.currency} 
+                  onChange={e => invoiceStore.setKey('currency', e.target.value)}
+                >
+                  <option value="IDR">IDR</option>
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="SGD">SGD</option>
+                  <option value="MYR">MYR</option>
+                  <option value="AUD">AUD</option>
+                  <option value="JPY">JPY</option>
+                  <option value="CAD">CAD</option>
+                  <option value="CHF">CHF</option>
+                  <option value="CNY">CNY</option>
+                  <option value="HKD">HKD</option>
+                  <option value="NZD">NZD</option>
+                  <option value="INR">INR</option>
+                  <option value="THB">THB</option>
+                  <option value="PHP">PHP</option>
+                  <option value="VND">VND</option>
+                  <option value="AED">AED</option>
+                </select>
               </div>
             </div>
 
