@@ -4,13 +4,13 @@ import { languageStore } from '@/store/invoiceStore';
 
 const heroTranslations = {
   en: {
-    title1: "Invoices are more than",
-    title2: "just bills.",
+    title1: "Create Branded Invoices",
+    title2: "That Match Your Identity",
     desc: "Personalize fonts, color palettes, and logos to create premium invoices that represent your brand—instantly, free, and hassle-free."
   },
   id: {
-    title1: "Invoice bukan sekadar",
-    title2: "tagihan.",
+    title1: "Buat Invoice Profesional",
+    title2: "Sesuai Identitas Brand Anda",
     desc: "Personalisasi font, palet warna, dan logo untuk menciptakan invoice premium yang merepresentasikan brand Anda—langsung jadi, gratis, tanpa ribet."
   }
 };
